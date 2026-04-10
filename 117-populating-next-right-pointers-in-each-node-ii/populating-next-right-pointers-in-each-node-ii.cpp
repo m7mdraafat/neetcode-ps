@@ -25,7 +25,6 @@ public:
         queue<Node*> q;
 
         q.push(root);
-        int currentLevel = 0;
         while (!q.empty())
         {
             int sz = q.size();
