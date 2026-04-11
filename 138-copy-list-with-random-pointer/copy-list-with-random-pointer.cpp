@@ -17,6 +17,8 @@ public:
 class Solution {
 public:
     Node* copyRandomList(Node* head) {
+        // O(n) time, O(n) space
+        // how can we cut the O(n) space??
         unordered_map<Node*, Node*> mp;
         Node* cur = head; 
         while (cur) {
