@@ -10,28 +10,40 @@
  */
 class Solution {
 public:
-    // O(n) time, O(n/k) recursion stack depth
+    // O(n) time, O(1) space
     ListNode* reverseKGroup(ListNode* head, int k) {
-        ListNode* cursor = head;
-        for (int i = 0; i < k; i++) {
-            if (cursor == nullptr) return head; // fewer thank k nodes left, don't reverse (base case)
-            cursor = cursor->next;
+        ListNode dummy(0, head);
+        ListNode* groupPrev = & dummy;
+
+        while (true) {
+            // Check if k nodes exist
+            ListNode* scout = groupPrev;
+            for (int i =0; i < k; i++) {
+                scout = scout->next;
+                if (scout == nullptr) return dummy.next;
+            }
+
+            // Reverse k nodes
+            ListNode* groupStart = groupPrev->next;
+            ListNode* prev = nullptr;
+            ListNode* curr = groupStart;
+            for (int i = 0; i < k; i++) {
+                ListNode* next = curr->next;
+                curr->next = prev;
+                prev = curr;
+                curr = next;
+            }
+
+            // prev = new head of reversed group
+            // curr = first node of next group
+            // groupStart = now the tail of the reversed group
+            
+            // back into list
+            groupStart->next = curr;
+            groupPrev->next = prev;
+
+            // advance to next group
+            groupPrev = groupStart;
         }
-
-        // cursor now is k + 1 node (first node of the second group)
-        ListNode* curr = head; // first node of the next group
-        ListNode* prev = nullptr; // new head of reversed group
-        ListNode* nxt = nullptr; 
-
-        // reverse current group
-        for (int i = 0; i < k; i++) {
-            nxt = curr->next;
-            curr->next = prev;
-            prev = curr;
-            curr = nxt;
-        }
-
-        head->next = reverseKGroup(curr, k); // head is now the tail of reversed group map to the new head of next group.
-        return prev;
     }
 };
