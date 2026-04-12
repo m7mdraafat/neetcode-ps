@@ -9,27 +9,35 @@
  * };
  */
 class Solution {
+    void reverseSublist(ListNode* nodeBeforeZone, ListNode* zoneStart, int count) {
+        ListNode* previous = nullptr;
+        ListNode* current = zoneStart;
+
+        for (int i = 0; i < count; i++) {
+            ListNode* nextNode = current->next;
+            current->next = previous; // 2 -> nullptr
+            previous = current; // 2
+            current = nextNode;
+        }
+
+        // after loop:
+        // previous = new head of reversed segment
+        // current = first node AFTER the reversed segment
+        ListNode* zoneTail = nodeBeforeZone->next; // original zoneStart -> now tail
+        zoneTail->next = current; // tail connects to rest of the list
+        nodeBeforeZone->next = previous; // splice reversed head in
+    }
 public:
     ListNode* reverseBetween(ListNode* head, int left, int right) {
-        if (!head || left == right) {
-            return head;
-        }
-
-        ListNode* dummy = new ListNode(0);
-        dummy->next = head;
-        ListNode* prev = dummy;
+        ListNode* dummy = new ListNode(0, head);
+        ListNode* nodeBeforeZone = dummy;
 
         for (int i = 0; i < left - 1; i++) {
-            prev = prev->next;
+            nodeBeforeZone = nodeBeforeZone->next;
         }
 
-        ListNode*cur = prev->next;
-        for (int i = 0; i < right - left; i++) {
-            ListNode* temp = cur->next; // 4
-            cur->next = temp->next; // 2 -> 5
-            temp->next = prev->next; // 4 -> 3
-            prev->next = temp; 
-        }
+        ListNode* zoneStart = nodeBeforeZone->next;
+        reverseSublist(nodeBeforeZone, zoneStart, right - left + 1);
 
         return dummy->next;
     }
