@@ -1,12 +1,13 @@
 class NumArray {
 private:
     vector<int> prefix;
-    int sumSoFar = 0;
 public:
     NumArray(vector<int>& nums) {
-        for (int num : nums) {
-            sumSoFar += num;
-            prefix.push_back(sumSoFar);
+        int n = nums.size();
+        prefix = vector<int>(n, 0);
+        prefix[0] = nums[0];
+        for (int i = 1; i < n; i++) {
+            prefix[i] = prefix[i-1] + nums[i];
         }
     }
     
